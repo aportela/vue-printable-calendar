@@ -1,0 +1,36 @@
+h1 {
+    text-align: center;
+    margin: 0em 0em 0.5em 0em;
+    font-size: 6em;
+    font-weight: bolder;
+}
+
+table {
+    table-layout: fixed;
+    width: 11em;
+}
+
+th {
+    text-align: center;
+    font-size: 2em;
+}
+
+td {
+    text-align: center;
+    font-size: 6em;
+    font-weight: bolder;
+    width: 10em;
+}
+
+@media print {
+    table {
+        border: solid #000 !important;
+        border-width: 2px 0 0 2px !important;
+    }
+
+    th,
+    td {
+        border: solid #000 !important;
+        border-width: 0 2px 2px 0 !important;
+    }
+}
