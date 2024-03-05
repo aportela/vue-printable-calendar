@@ -4,7 +4,7 @@ import './style.css'
 </script>
 
 <template>
-  <PrintableCalendar />
+  <PrintableCalendar :start-at-sunday="false" :full-names="true" />
 </template>
 
 <style scoped></style>
