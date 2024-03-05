@@ -27,6 +27,7 @@ th, td {
     table {
         border: solid #000 !important;
         border-width: 2px 0 0 2px !important;
+        border-collapse: collapse;
     }
 
     th {
