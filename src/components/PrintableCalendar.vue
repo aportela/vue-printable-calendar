@@ -90,3 +90,53 @@ const calendar = getCalendar(props.startAtSunday, currentYear, currentDate.getMo
     </table>
   </div>
 </template>
+
+<style>
+h1 {
+  text-align: center;
+  margin: 0em 0em 0.5em 0em;
+  font-size: 6em;
+  font-weight: bolder;
+}
+
+table {
+  table-layout: fixed;
+
+}
+
+th {
+  font-size: 2em;
+}
+
+td {
+  font-size: 6em;
+  font-weight: bolder;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+@media print {
+  table {
+    border: solid #000 !important;
+    border-width: 2px 0 0 2px !important;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-size: 1.5em;
+  }
+
+  td {
+    font-size: 3.4em;
+  }
+
+  th,
+  td {
+    border: solid #000 !important;
+    border-width: 0 2px 2px 0 !important;
+  }
+}
+</style>
