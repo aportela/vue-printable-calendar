@@ -1,11 +1,14 @@
 <script setup lang="ts">
 
-import { withDefaults } from 'vue'
+import { withDefaults, watch, ref } from 'vue'
+import type { Ref } from 'vue'
 
 interface Props {
   locale?: string
   startAtSunday?: boolean,
-  fullNames?: boolean
+  fullNames?: boolean,
+  month: number,
+  year: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -14,24 +17,52 @@ const props = withDefaults(defineProps<Props>(), {
   fullNames: true
 })
 
-const currentDate = new Date()
-const currentMonthName = currentDate.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase()
-const currentYear = currentDate.getFullYear()
+const calendarDate = new Date()
+calendarDate.setMonth(props.month - 1)
+calendarDate.setFullYear(props.year)
+
+const currentMonthName: Ref<string> = ref(calendarDate.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase())
+const currentYear: Ref<number> = ref(calendarDate.getFullYear())
+
+watch(() => props.month, (newValue) => {
+  if (newValue >= 1 && newValue <= 12) {
+    refresh(newValue, props.year, props.startAtSunday)
+  }
+})
+
+watch(() => props.year, (newValue) => {
+  if (newValue > 0 && newValue <= 3000) {
+    refresh(props.month, newValue, props.startAtSunday)
+  }
+})
+
+watch(() => props.startAtSunday, (newValue) => {
+  weekDayNames.value = getWeekDayNames(props.locale, newValue, props.fullNames)
+  refresh(props.month, props.year, newValue)
+})
+
+function refresh(month: number, year: number, startAtSunday: boolean) {
+  calendarDate.setMonth(month - 1)
+  calendarDate.setFullYear(year)
+  currentMonthName.value = calendarDate.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase()
+  currentYear.value = calendarDate.getFullYear()
+  calendar.value = getCalendar(startAtSunday, currentYear.value, calendarDate.getMonth() + 1)
+}
 
 function getWeekDayNames(locale: string = window.navigator.language, startAtSunday: boolean = false, fullName: boolean = true) {
   const weekDayNames = []
-  const currentDate = new Date()
-  const currentDayOfWeek = currentDate.getDay()
+  const tmpDate = new Date()
+  const currentDayOfWeek = tmpDate.getDay()
   const daysToAdd = startAtSunday ? (0 - currentDayOfWeek) : (1 - currentDayOfWeek)
-  currentDate.setDate(currentDate.getDate() + daysToAdd)
+  tmpDate.setDate(tmpDate.getDate() + daysToAdd)
   for (let i = 0; i < 7; i++) {
-    weekDayNames.push(currentDate.toLocaleDateString(locale, { weekday: fullName ? 'long' : 'short' }).toUpperCase())
-    currentDate.setDate(currentDate.getDate() + 1)
+    weekDayNames.push(tmpDate.toLocaleDateString(locale, { weekday: fullName ? 'long' : 'short' }).toUpperCase())
+    tmpDate.setDate(tmpDate.getDate() + 1)
   }
   return (weekDayNames)
 }
 
-const weekDayNames = getWeekDayNames(props.locale, props.startAtSunday, props.fullNames)
+const weekDayNames = ref(getWeekDayNames(props.locale, props.startAtSunday, props.fullNames))
 
 function getCalendar(startAtSunday: boolean, currentFullYear: number, month: number) {
   const firstDayOfMonth = new Date(currentFullYear, month - 1, 1).getDay()
@@ -42,7 +73,8 @@ function getCalendar(startAtSunday: boolean, currentFullYear: number, month: num
 
   const firstDayOfWeekIndex = startAtSunday ? 0 : 1
 
-  let emptyCellsBefore = firstDayOfMonth - firstDayOfWeekIndex;
+  let emptyCellsBefore = firstDayOfMonth - firstDayOfWeekIndex
+
   if (emptyCellsBefore < 0) {
     emptyCellsBefore += 7
   }
@@ -65,30 +97,29 @@ function getCalendar(startAtSunday: boolean, currentFullYear: number, month: num
     }
     calendar.push(currentWeek)
   }
-  calendar.push(currentWeek)
   return (calendar)
 }
 
-const calendar = getCalendar(props.startAtSunday, currentYear, currentDate.getMonth() + 1)
+const calendar: Ref<[]> = ref([])
+
+calendar.value = getCalendar(props.startAtSunday, currentYear.value, calendarDate.getMonth() + 1)
 
 </script>
 
 <template>
   <h1 class="text-center"> {{ currentMonthName }} {{ currentYear }} </h1>
-  <div id="calendar">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th v-for="weekDayName in weekDayNames" :key="weekDayName"> {{ weekDayName }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="week in calendar">
-          <td v-for="monthDayNumber in week"> {{ monthDayNumber }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th v-for="weekDayName in weekDayNames" :key="weekDayName"> {{ weekDayName }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="week in calendar">
+        <td v-for="monthDayNumber in week"> {{ monthDayNumber }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <style>
