@@ -100,7 +100,7 @@ function getCalendar(startAtSunday: boolean, currentFullYear: number, month: num
   return (calendar)
 }
 
-const calendar: Ref<[]> = ref([])
+const calendar: Ref<(string | number)[][]> = ref([])
 
 calendar.value = getCalendar(props.startAtSunday, currentYear.value, calendarDate.getMonth() + 1)
 
