@@ -3,6 +3,8 @@
 import { withDefaults, watch, ref } from 'vue'
 import type { Ref } from 'vue'
 
+const tdPrintableFontSize: Ref<string> = ref("3.7em")
+
 interface Props {
   locale?: string
   startAtSunday?: boolean,
@@ -97,6 +99,7 @@ function getCalendar(startAtSunday: boolean, currentFullYear: number, month: num
     }
     calendar.push(currentWeek)
   }
+  tdPrintableFontSize.value = calendar.length > 5 ? "3em" : "3.7em"
   return (calendar)
 }
 
@@ -161,7 +164,7 @@ td {
   }
 
   td {
-    font-size: 3.4em;
+    font-size: v-bind(tdPrintableFontSize);
   }
 
   th,
