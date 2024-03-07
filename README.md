@@ -8,6 +8,9 @@ Every month, I need to print out a calendar on paper, so I asked ChatGPT (3.5) t
 
 ## Showcase
 
+![calendar preview](https://github.com/aportela/vue-printable-calendar/assets/705838/f194c004-e5f8-4410-95d0-e2bad2040130)
+
+
 ## TLDR (I don't want to complicate my life, just print a calendar)
 
 Download / unzip last build release in a path of your web server and point your browser to the corresponding URL.
