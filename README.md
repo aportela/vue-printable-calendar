@@ -51,3 +51,5 @@ $ npm run build
 **year**: Number
 
     Description: default year
+
+![Node.js CI](https://github.com/aportela/vue-printable-calendar/actions/workflows/node.js.yml/badge.svg)
