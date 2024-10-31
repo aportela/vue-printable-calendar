@@ -19,12 +19,13 @@ const props = withDefaults(defineProps<Props>(), {
   fullNames: true
 })
 
-const calendarDate = new Date()
-calendarDate.setMonth(props.month - 1)
-calendarDate.setFullYear(props.year)
+const calendarDate: Ref<Date> = ref(new Date());
+calendarDate.value.setDate(1)
+calendarDate.value.setMonth(props.month - 1)
+calendarDate.value.setFullYear(props.year)
 
-const currentMonthName: Ref<string> = ref(calendarDate.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase())
-const currentYear: Ref<number> = ref(calendarDate.getFullYear())
+const currentMonthName: Ref<string> = ref(calendarDate.value.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase())
+const currentYear: Ref<number> = ref(calendarDate.value.getFullYear())
 
 watch(() => props.month, (newValue) => {
   if (newValue >= 1 && newValue <= 12) {
@@ -44,11 +45,11 @@ watch(() => props.startAtSunday, (newValue) => {
 })
 
 function refresh(month: number, year: number, startAtSunday: boolean) {
-  calendarDate.setMonth(month - 1)
-  calendarDate.setFullYear(year)
-  currentMonthName.value = calendarDate.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase()
-  currentYear.value = calendarDate.getFullYear()
-  calendar.value = getCalendar(startAtSunday, currentYear.value, calendarDate.getMonth() + 1)
+  calendarDate.value.setMonth(month - 1)
+  calendarDate.value.setFullYear(year)
+  currentMonthName.value = calendarDate.value.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase()
+  currentYear.value = calendarDate.value.getFullYear()
+  calendar.value = getCalendar(startAtSunday, currentYear.value, calendarDate.value.getMonth() + 1)
 }
 
 function getWeekDayNames(locale: string = window.navigator.language, startAtSunday: boolean = false, fullName: boolean = true) {
@@ -105,7 +106,7 @@ function getCalendar(startAtSunday: boolean, currentFullYear: number, month: num
 
 const calendar: Ref<(string | number)[][]> = ref([])
 
-calendar.value = getCalendar(props.startAtSunday, currentYear.value, calendarDate.getMonth() + 1)
+calendar.value = getCalendar(props.startAtSunday, currentYear.value, calendarDate.value.getMonth() + 1)
 
 </script>
 
