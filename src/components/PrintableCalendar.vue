@@ -49,7 +49,7 @@ function refresh(month: number, year: number, startAtSunday: boolean) {
   calendarDate.value.setFullYear(year)
   currentMonthName.value = calendarDate.value.toLocaleDateString(props.locale, { month: props.fullNames ? 'long' : 'short' }).toUpperCase()
   currentYear.value = calendarDate.value.getFullYear()
-  calendar.value = getCalendar(startAtSunday, currentYear.value, calendarDate.value.getMonth() + 1)
+  calendar.value = getCalendar(startAtSunday, currentYear.value, month)
 }
 
 function getWeekDayNames(locale: string = window.navigator.language, startAtSunday: boolean = false, fullName: boolean = true) {
@@ -106,7 +106,7 @@ function getCalendar(startAtSunday: boolean, currentFullYear: number, month: num
 
 const calendar: Ref<(string | number)[][]> = ref([])
 
-calendar.value = getCalendar(props.startAtSunday, currentYear.value, calendarDate.value.getMonth() + 1)
+calendar.value = getCalendar(props.startAtSunday, currentYear.value, props.month)
 
 </script>
 
